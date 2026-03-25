@@ -1,8 +1,8 @@
 {
-  "name": "my-app-name",
+  "name": "simplicityvibe-strapi-cms",
   "version": "0.1.0",
   "private": true,
-  "description": "A Strapi application",
+  "description": "SimplicityVibe Knowledge Hub CMS (Strapi 5) – BL-003a",
   "scripts": {
     "build": "strapi build",
     "deploy": "strapi deploy",

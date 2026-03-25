@@ -3,7 +3,15 @@
 const fs = require('fs-extra');
 const path = require('path');
 const mime = require('mime-types');
-const { categories, authors, articles, global, about } = require('../data/data.json');
+const {
+  categories,
+  personas,
+  tags,
+  authors,
+  articles,
+  global,
+  about,
+} = require('../data/data.json');
 
 async function seedExampleApp() {
   const shouldImportSeedData = await isFirstRun();
@@ -222,6 +230,18 @@ async function importCategories() {
   }
 }
 
+async function importPersonas() {
+  for (const persona of personas) {
+    await createEntry({ model: 'persona', entry: persona });
+  }
+}
+
+async function importTags() {
+  for (const tag of tags) {
+    await createEntry({ model: 'tag', entry: tag });
+  }
+}
+
 async function importAuthors() {
   for (const author of authors) {
     const avatar = await checkFileExistsBeforeUpload([author.avatar]);
@@ -237,37 +257,24 @@ async function importAuthors() {
 }
 
 async function importSeedData() {
-  // Allow read of application content types
+  /**
+   * Knowledge Hub (BL-003): Article, Category, Author, Tag, Persona are NOT exposed on the Public role.
+   * SimplicityVibe backend must use a Strapi API Token (Settings → API Tokens → Read-only or Custom).
+   * See README.md in this folder.
+   */
   await setPublicPermissions({
-    article: ['find', 'findOne'],
-    category: ['find', 'findOne'],
-    author: ['find', 'findOne'],
     global: ['find', 'findOne'],
     about: ['find', 'findOne'],
   });
 
-  // Create all entries
   await importCategories();
+  await importPersonas();
+  await importTags();
   await importAuthors();
   await importArticles();
   await importGlobal();
   await importAbout();
 }
-
-async function main() {
-  const { createStrapi, compileStrapi } = require('@strapi/strapi');
-
-  const appContext = await compileStrapi();
-  const app = await createStrapi(appContext).load();
-
-  app.log.level = 'error';
-
-  await seedExampleApp();
-  await app.destroy();
-
-  process.exit(0);
-}
-
 
 module.exports = async () => {
   await seedExampleApp();

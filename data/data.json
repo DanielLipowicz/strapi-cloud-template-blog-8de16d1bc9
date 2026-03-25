@@ -49,6 +49,23 @@
       "slug": "story"
     }
   ],
+  "personas": [
+    {
+      "name": "Car owner",
+      "slug": "car-owner",
+      "description": "End users managing their vehicles"
+    },
+    {
+      "name": "Fleet manager",
+      "slug": "fleet-manager",
+      "description": "Operators managing multiple vehicles"
+    }
+  ],
+  "tags": [
+    { "name": "Help", "slug": "help" },
+    { "name": "News", "slug": "news" },
+    { "name": "Maintenance", "slug": "maintenance" }
+  ],
   "authors": [
     {
       "name": "David Doe",
@@ -71,7 +88,14 @@
       "author": {
         "id": 1
       },
-      "description": "Follow the story of Aaron Swartz, the boy who could change the world",
+      "persona": {
+        "id": 1
+      },
+      "tags": [{ "id": 1 }, { "id": 2 }],
+      "featured": false,
+      "editorialPriority": 10,
+      "excludeFromRecommendations": false,
+      "lead": "Follow the story of Aaron Swartz, the boy who could change the world",
       "cover": null,
       "blocks": [
         {
@@ -106,7 +130,14 @@
       "author": {
         "id": 1
       },
-      "description": "Mantis shrimps, or stomatopods, are marine crustaceans of the order Stomatopoda.",
+      "persona": {
+        "id": 1
+      },
+      "tags": [{ "id": 2 }, { "id": 3 }],
+      "featured": false,
+      "editorialPriority": 0,
+      "excludeFromRecommendations": false,
+      "lead": "Mantis shrimps, or stomatopods, are marine crustaceans of the order Stomatopoda.",
       "cover": null,
       "blocks": [
         {
@@ -141,7 +172,14 @@
       "author": {
         "id": 2
       },
-      "description": "How a bug on MySQL is becoming a meme on the internet",
+      "persona": {
+        "id": 2
+      },
+      "tags": [{ "id": 1 }, { "id": 3 }],
+      "featured": true,
+      "editorialPriority": 5,
+      "excludeFromRecommendations": false,
+      "lead": "How a bug on MySQL is becoming a meme on the internet",
       "cover": null,
       "blocks": [
         {
@@ -176,7 +214,14 @@
       "author": {
         "id": 2
       },
-      "description": "Description of a beautiful picture",
+      "persona": {
+        "id": 1
+      },
+      "tags": [{ "id": 2 }],
+      "featured": false,
+      "editorialPriority": 0,
+      "excludeFromRecommendations": false,
+      "lead": "Description of a beautiful picture",
       "cover": null,
       "blocks": [
         {
@@ -211,7 +256,14 @@
       "author": {
         "id": 2
       },
-      "description": "Maybe the answer is in this article, or not...",
+      "persona": {
+        "id": 2
+      },
+      "tags": [{ "id": 1 }, { "id": 2 }, { "id": 3 }],
+      "featured": false,
+      "editorialPriority": 0,
+      "excludeFromRecommendations": false,
+      "lead": "Maybe the answer is in this article, or not...",
       "cover": null,
       "blocks": [
         {

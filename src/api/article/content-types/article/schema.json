@@ -5,7 +5,7 @@
     "singularName": "article",
     "pluralName": "articles",
     "displayName": "Article",
-    "description": "Create your blog content"
+    "description": "Knowledge Hub article content (managed in CMS; consumed via SimplicityVibe backend)"
   },
   "options": {
     "draftAndPublish": true
@@ -13,15 +13,17 @@
   "pluginOptions": {},
   "attributes": {
     "title": {
-      "type": "string"
-    },
-    "description": {
-      "type": "text",
-      "maxLength": 80
+      "type": "string",
+      "required": true
     },
     "slug": {
       "type": "uid",
-      "targetField": "title"
+      "targetField": "title",
+      "required": true
+    },
+    "lead": {
+      "type": "text",
+      "maxLength": 2000
     },
     "cover": {
       "type": "media",
@@ -41,9 +43,57 @@
       "target": "api::category.category",
       "inversedBy": "articles"
     },
+    "tags": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::tag.tag",
+      "inversedBy": "articles"
+    },
+    "persona": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::persona.persona",
+      "inversedBy": "articles"
+    },
     "blocks": {
       "type": "dynamiczone",
       "components": ["shared.media", "shared.quote", "shared.rich-text", "shared.slider"]
+    },
+    "sources": {
+      "type": "text"
+    },
+    "featured": {
+      "type": "boolean",
+      "default": false
+    },
+    "editorialPriority": {
+      "type": "integer",
+      "default": 0,
+      "min": 0
+    },
+    "manualRelatedArticles": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::article.article",
+      "inversedBy": "manualRelatedInverse"
+    },
+    "manualRelatedInverse": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::article.article",
+      "mappedBy": "manualRelatedArticles"
+    },
+    "promotedForLocale": {
+      "type": "string",
+      "maxLength": 16
+    },
+    "campaignTag": {
+      "type": "string",
+      "maxLength": 128
+    },
+    "excludeFromRecommendations": {
+      "type": "boolean",
+      "default": false
     }
   }
 }
