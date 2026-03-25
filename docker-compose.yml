@@ -1,0 +1,35 @@
+# Local Knowledge Hub CMS (Strapi). Use from repo root: docker compose -f strapi-cloud-template-blog/docker-compose.yml up --build
+services:
+  strapi:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: simplicityvibe-strapi-cms:local
+    ports:
+      - "1337:1337"
+    environment:
+      HOST: 0.0.0.0
+      PORT: 1337
+      DATABASE_CLIENT: sqlite
+      DATABASE_FILENAME: .tmp/data.db
+      # Replace with secure values for non-local use (see .env.example)
+      APP_KEYS: ${STRAPI_APP_KEYS:-devKey1,devKey2,devKey3,devKey4}
+      API_TOKEN_SALT: ${STRAPI_API_TOKEN_SALT:-devApiTokenSaltChangeMe}
+      ADMIN_JWT_SECRET: ${STRAPI_ADMIN_JWT_SECRET:-devAdminJwtSecretChangeMe}
+      JWT_SECRET: ${STRAPI_JWT_SECRET:-devJwtSecretChangeMe}
+      TRANSFER_TOKEN_SALT: ${STRAPI_TRANSFER_TOKEN_SALT:-devTransferSaltChangeMe}
+      KNOWLEDGE_HUB_WEBHOOK_URL: ${KNOWLEDGE_HUB_WEBHOOK_URL:-}
+      KNOWLEDGE_HUB_WEBHOOK_SECRET: ${KNOWLEDGE_HUB_WEBHOOK_SECRET:-}
+    volumes:
+      - strapi_sqlite:/app/.tmp
+      - strapi_uploads:/app/public/uploads
+    networks:
+      - strapi-net
+
+volumes:
+  strapi_sqlite:
+  strapi_uploads:
+
+networks:
+  strapi-net:
+    driver: bridge
