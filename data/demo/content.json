@@ -1,0 +1,62 @@
+{
+  "author": {
+    "name": "Zespół SimplicityVibe",
+    "email": "redakcja@simplicityvibe.example"
+  },
+  "category": {
+    "name": "Eksploatacja samochodu",
+    "slug": "eksploatacja-samochodu",
+    "description": "Praktyczne wskazówki dotyczące bezpiecznej i ekonomicznej eksploatacji samochodu."
+  },
+  "tags": [
+    { "name": "Olej silnikowy", "slug": "olej-silnikowy" },
+    { "name": "Opony", "slug": "opony" },
+    { "name": "Serwis sezonowy", "slug": "serwis-sezonowy" }
+  ],
+  "covers": {
+    "wymiana-oleju-silnikowego.png": {
+      "alternativeText": "Wymiana oleju silnikowego w warsztacie",
+      "caption": "Regularna wymiana oleju pomaga chronić silnik"
+    },
+    "sezonowa-wymiana-opon.png": {
+      "alternativeText": "Sezonowa wymiana opon w warsztacie",
+      "caption": "Kontrola i wymiana opon przed zmianą sezonu"
+    }
+  },
+  "articles": [
+    {
+      "title": "Kiedy wymienić olej silnikowy?",
+      "slug": "kiedy-wymienic-olej-silnikowy",
+      "lead": "Regularna wymiana oleju to jedna z najważniejszych czynności chroniących silnik przed przedwczesnym zużyciem.",
+      "cover": "wymiana-oleju-silnikowego.png",
+      "tags": ["olej-silnikowy"],
+      "blocks": [
+        {
+          "__component": "shared.rich-text",
+          "body": "## Kiedy zaplanować wymianę?\n\nRegularna wymiana oleju chroni silnik przed nadmiernym zużyciem i pomaga utrzymać jego prawidłową temperaturę. Najczęściej należy wykonywać ją co 10–15 tys. kilometrów lub raz w roku, uwzględniając zalecenia producenta pojazdu. Razem z olejem warto zawsze wymienić filtr oleju. W samochodach użytkowanych głównie na krótkich trasach interwał może wymagać skrócenia."
+        }
+      ],
+      "sources": "Instrukcja obsługi i harmonogram serwisowy producenta pojazdu.",
+      "featured": true,
+      "editorialPriority": 100,
+      "excludeFromRecommendations": false
+    },
+    {
+      "title": "Sezonowa wymiana i dobór opon",
+      "slug": "sezonowa-wymiana-i-dobor-opon",
+      "lead": "Właściwy moment wymiany i dobrze dobrane parametry opon zwiększają bezpieczeństwo w każdych warunkach.",
+      "cover": "sezonowa-wymiana-opon.png",
+      "tags": ["opony", "serwis-sezonowy"],
+      "blocks": [
+        {
+          "__component": "shared.rich-text",
+          "body": "## Kiedy zmienić opony?\n\nOpony zimowe warto założyć, gdy średnia temperatura zaczyna utrzymywać się poniżej 7°C, a letnie po ustąpieniu ryzyka przymrozków. Podczas wymiany należy sprawdzić głębokość bieżnika, wiek opon, ciśnienie oraz ewentualne uszkodzenia. Po montażu dobrze jest skontrolować dokręcenie kół po przejechaniu około 50–100 kilometrów.\n\n## Jak dobrać opony?\n\nRozmiar oraz indeksy nośności i prędkości muszą być zgodne z homologacją samochodu. Przy wyborze warto uwzględnić typ tras, roczny przebieg i warunki pogodowe, a nie tylko cenę. Opony całoroczne dobrze sprawdzają się przy umiarkowanych przebiegach i głównie miejskiej eksploatacji, natomiast zestawy sezonowe zapewniają większy margines bezpieczeństwa w trudniejszych warunkach."
+        }
+      ],
+      "sources": "Instrukcja pojazdu, oznaczenia homologacyjne oraz etykieta opony.",
+      "featured": true,
+      "editorialPriority": 90,
+      "excludeFromRecommendations": false
+    }
+  ]
+}

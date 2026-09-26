@@ -1,5 +1,34 @@
 # Local Knowledge Hub CMS (Strapi). Use from repo root: docker compose -f strapi-cloud-template-blog/docker-compose.yml up --build
+x-strapi-environment: &strapi-environment
+  HOST: 0.0.0.0
+  PORT: 1337
+  DATABASE_CLIENT: sqlite
+  DATABASE_FILENAME: .tmp/data.db
+  # Replace with secure values for non-local use (see .env.example)
+  APP_KEYS: ${STRAPI_APP_KEYS:-devKey1,devKey2,devKey3,devKey4}
+  API_TOKEN_SALT: ${STRAPI_API_TOKEN_SALT:-devApiTokenSaltChangeMe}
+  ADMIN_JWT_SECRET: ${STRAPI_ADMIN_JWT_SECRET:-devAdminJwtSecretChangeMe}
+  JWT_SECRET: ${STRAPI_JWT_SECRET:-devJwtSecretChangeMe}
+  TRANSFER_TOKEN_SALT: ${STRAPI_TRANSFER_TOKEN_SALT:-devTransferSaltChangeMe}
+  ENCRYPTION_KEY: ${STRAPI_ENCRYPTION_KEY:-devEncryptionKeyChangeMe}
+  STRAPI_API_TOKEN: ${STRAPI_API_TOKEN:-local-demo-read-only-token-change-me}
+  STRAPI_DEMO_CONTENT_ENABLED: ${STRAPI_DEMO_CONTENT_ENABLED:-true}
+
 services:
+  strapi-seed:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: simplicityvibe-strapi-cms:local
+    command: ["npm", "run", "seed:demo"]
+    environment: *strapi-environment
+    volumes:
+      - strapi_sqlite:/app/.tmp
+      - strapi_uploads:/app/public/uploads
+    networks:
+      - strapi-net
+    restart: "no"
+
   strapi:
     build:
       context: .
@@ -8,23 +37,24 @@ services:
     ports:
       - "1337:1337"
     environment:
-      HOST: 0.0.0.0
-      PORT: 1337
-      DATABASE_CLIENT: sqlite
-      DATABASE_FILENAME: .tmp/data.db
-      # Replace with secure values for non-local use (see .env.example)
-      APP_KEYS: ${STRAPI_APP_KEYS:-devKey1,devKey2,devKey3,devKey4}
-      API_TOKEN_SALT: ${STRAPI_API_TOKEN_SALT:-devApiTokenSaltChangeMe}
-      ADMIN_JWT_SECRET: ${STRAPI_ADMIN_JWT_SECRET:-devAdminJwtSecretChangeMe}
-      JWT_SECRET: ${STRAPI_JWT_SECRET:-devJwtSecretChangeMe}
-      TRANSFER_TOKEN_SALT: ${STRAPI_TRANSFER_TOKEN_SALT:-devTransferSaltChangeMe}
+      <<: *strapi-environment
       KNOWLEDGE_HUB_WEBHOOK_URL: ${KNOWLEDGE_HUB_WEBHOOK_URL:-}
       KNOWLEDGE_HUB_WEBHOOK_SECRET: ${KNOWLEDGE_HUB_WEBHOOK_SECRET:-}
+    depends_on:
+      strapi-seed:
+        condition: service_completed_successfully
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:1337/_health').then(r=>{if(!r.ok)process.exit(1)}).catch(()=>process.exit(1))"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
     volumes:
       - strapi_sqlite:/app/.tmp
       - strapi_uploads:/app/public/uploads
     networks:
       - strapi-net
+    restart: unless-stopped
 
 volumes:
   strapi_sqlite:

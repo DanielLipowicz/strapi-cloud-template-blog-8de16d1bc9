@@ -47,16 +47,15 @@ Headless CMS for the **Knowledge Hub** feature ([IMPL-13 BL-003a](../docs/featur
 4. **Logged in** — The React app calls `/knowledge/articles` with JWT; open **Knowledge Hub** after login.
 5. **Strapi 5** — The Spring proxy uses `status=published` (not the old v4 `publicationState=live`).
 
-### First-time seed data
+### Demo seed data
 
-On the **first** successful bootstrap, `src/bootstrap.js` imports `data/data.json` (categories, personas, tags, authors, articles).  
-To re-seed, delete the SQLite DB (default: `.tmp/data.db`) and the Strapi store flag, or use a fresh database.
+The explicit deployment seed creates two published Polish automotive articles, their category, tags, author, and cover images. It uses stable slugs, so repeated runs do not create duplicates or overwrite editorial changes. Set `STRAPI_DEMO_CONTENT_ENABLED=true` to enable the articles and provide `STRAPI_API_TOKEN` to provision the backend's read-only token.
 
 ```bash
-npm run seed:example
+STRAPI_DEMO_CONTENT_ENABLED=true STRAPI_API_TOKEN=change-me npm run seed:demo
 ```
 
-This boots Strapi once; bootstrap runs automatically during `load()` (same as `develop` / `start`).
+The Docker Compose configurations run this command as a one-off service before Strapi starts. Keep `STRAPI_DEMO_CONTENT_ENABLED=false` in editorial production environments.
 
 ## Docker
 
