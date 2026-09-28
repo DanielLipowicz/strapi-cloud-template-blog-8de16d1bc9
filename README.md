@@ -73,6 +73,70 @@ docker compose -f strapi-cloud-template-blog/docker-compose.yml up --build
 
 Override secrets via environment (see `docker-compose.yml`). Persisted volumes: SQLite under `/app/.tmp`, uploads under `/app/public/uploads`.
 
+Deleting either Docker volume deletes the corresponding local data. Rebuilding or replacing the container does not delete the named volumes.
+
+## Managing content and data
+
+### Editorial work
+
+Editors use `http://localhost:1337/admin` locally, or the protected production admin hostname, and manage content through **Content Manager** and **Media Library**.
+
+Recommended publication flow:
+
+1. Create or update an Article and keep it as a draft.
+2. Complete the category, tags, persona, sources, cover, and article blocks.
+3. Have a user with publishing responsibility verify the entry.
+4. Publish it. The SimplicityVibe backend reads only published entries and the lifecycle hook notifies its metadata read model.
+5. Use unpublish when content should disappear temporarily; reserve delete for content that should be removed permanently.
+
+Recommended responsibility split:
+
+- **CMS administrator:** content models, admin users, roles, tokens, and system settings.
+- **Editor:** content and media without system or token administration.
+- **Publisher:** publish and unpublish after editorial verification.
+- **Backend integration:** custom read-only API token with only the required `find` and `findOne` permissions.
+
+### What belongs in Git
+
+Commit content-type schemas, components, controllers, lifecycle hooks, and configuration. Do not commit production databases, production articles, uploaded files, `.env` files, API tokens, or export archives.
+
+Develop and review schema changes locally, then test them against a restored production-like database before production deployment. Application deployment must never reset or re-seed production editorial content.
+
+### Environment policy
+
+- **Local:** SQLite and named Docker volumes are appropriate. Example seed data is allowed.
+- **Staging:** use a dedicated PostgreSQL database and a dedicated media bucket/storage location.
+- **Production:** use PostgreSQL plus durable object storage or a backed-up persistent storage service. Do not share databases or media buckets between environments.
+
+Seed scripts are for local examples and deterministic reference data only. Normal editorial content is created in the target environment through the admin panel rather than promoted through Git.
+
+### Export and import
+
+Strapi export creates a portable snapshot containing content, relations, schemas, configuration, and—unless excluded—media. It does not include administrator users or API tokens.
+
+Example encrypted export from the local Docker service:
+
+```bash
+docker compose exec strapi npm run strapi -- export --file /app/.tmp/strapi-backup
+docker compose cp strapi:/app/.tmp/strapi-backup.tar.gz.enc ./strapi-backup.tar.gz.enc
+```
+
+The first command interactively asks for an encryption key, avoiding a secret in shell history. Store that key separately from the archive. Copy the generated archive out of the container/volume and store it outside the Docker host. Do not commit it to Git. For production, prefer automated native PostgreSQL backups and media bucket backup/versioning; treat Strapi export as an additional portable snapshot, especially before upgrades or schema changes.
+
+> **Destructive operation:** `strapi import` clears existing destination data and uploads before restoring and requires matching schemas. Take a fresh destination backup, isolate its media storage, and prove the import on staging before using it in production.
+
+See the official [data export](https://docs.strapi.io/cms/features/data-management/export), [data import](https://docs.strapi.io/cms/features/data-management/import), and [data transfer](https://docs.strapi.io/cms/features/data-management/transfer) documentation.
+
+### Production recovery baseline
+
+- Back up PostgreSQL and media storage on an automated schedule with defined retention.
+- Keep backups encrypted and outside the runtime host.
+- Store secrets, administrator recovery, and API-token recreation procedures separately from data exports.
+- Regularly restore into a clean environment and verify admin login, published Content API reads, media, and webhook delivery.
+- Define an owner, RPO, RTO, monitoring, and escalation path before production launch.
+
+The architectural policy is documented in [Strapi as CMS for Knowledge Hub](../docs/architecture/strapi-knowledge-hub-cms.md); production implementation is tracked in [BL-003e](../docs/features/backlog/BL-003e-strapi-production-readiness.md).
+
 ## Content model (Knowledge Hub)
 
 | Type       | Purpose |
@@ -145,6 +209,8 @@ npx strapi ts:generate-types
 ## Production database
 
 `config/database.js` supports `sqlite` (default), `postgres`, and `mysql` via `DATABASE_CLIENT` and related env vars.
+
+SQLite is a local-development choice. The production baseline is a dedicated PostgreSQL database with a least-privilege user; production media must not rely on the container filesystem.
 
 ## References
 
